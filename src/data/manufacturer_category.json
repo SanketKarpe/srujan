@@ -1,0 +1,23 @@
+{
+
+    "iot": [
+      "Espressif Inc.",
+      "LG Innotek",
+      "Nest Labs Inc.",
+      "ecobee inc",
+      "Philips Lighting BV",
+      "Philips Personal Health Solutions",
+      "Philips Electronics Nederland BV",
+      "Wink communication technology CO.LTD",
+      "SmartThings, Inc."
+    ],
+    "non_iot": [
+      "Motorola Mobility LLC, a Lenovo Company",
+      "Apple, Inc.",
+      "Microsoft",
+      "Google, Inc.",
+      "OnePlus Technology (Shenzhen) Co., Ltd",
+      "Sony Mobile Communications AB",
+      "LG Electronics (Mobile Communications)"
+      ]
+}

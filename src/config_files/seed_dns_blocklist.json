@@ -1,0 +1,9 @@
+{
+  "sink_ip":"127.0.0.1",
+  "urls":
+        [
+        "example-heartbeat-site-to-block.com",
+        "example-heartbeat-site-to-block.com",
+        "example-heartbeat-site-to-block.com"
+      ]
+}

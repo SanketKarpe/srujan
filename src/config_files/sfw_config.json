@@ -1,0 +1,64 @@
+{
+  "core":
+  {
+    "interfaces": [ "eth0","eth1"],
+    "logging":
+    {
+        "log_path":
+        {
+          "log-facility": "/var/log/dnsmasq.log"
+        },
+        "logging_options":
+        {
+           "log-async": true,
+          "log-queries": true,
+          "log-dhcp": false
+        }
+    }
+  },
+  "dhcp":
+  {
+    "subnets": {
+      "iot": {
+        "dhcp-range": {
+          "start_ip": "192.168.10.50",
+          "end_ip": "192.168.10.150",
+          "duration": "12h"
+        },
+        "dhcp-options": {
+          "3": "192.168.10.1",
+          "6": "192.168.10.1"
+        }
+      },
+      "non_iot": {
+        "dhcp-range": {
+          "start_ip": "192.168.1.50",
+          "end_ip": "192.168.1.150",
+          "duration": "12h"
+        },
+        "dhcp-options": {
+          "3": "192.168.1.1",
+          "6": "192.168.1.2"
+        }
+      }
+    },
+      "dhcp-core-options":
+      {
+        "dhcp-authoritative": true,
+        "dhcp-log": false
+      },
+      "dhcp-script": "/home/sfw/sfw-core/sfw_dhcp_options_id.py"
+  },
+  "dns":
+  {
+    "dns-options":
+    {
+      "domain-needed": true,
+      "bogus-priv": true,
+      "no-resolv": true,
+      "no-poll": true,
+      "no-hosts": true
+    },
+    "servers": ["8.8.8.8"]
+    }
+  }
