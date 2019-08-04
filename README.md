@@ -1,4 +1,5 @@
 # Srujan- Safer Networks for Smart Homes
+https://sanketkarpe.github.io/srujan/
 
 Srujan is a new type of network segregation system, based on Raspberry Pi, that can be easily deployed on home networks. 
 It allows home users to segregate the devices connecting to their home networks based on the threat profile. 
@@ -19,5 +20,6 @@ blacklisted by [Google Safe Browsing](https://safebrowsing.google.com/) , [hpHos
 * Integration with [ANWI (All New Wireless IDS)](https://github.com/anwi-wips/anwi)
 * Prevent call-home pings to manufacturer for enhanced privacy.
 
+#### Reporting Dashboard
+![Reporting Dashboard](https://github.com/SanketKarpe/srujan/blob/master/docs/images/dashboard.PNG)
 
-https://sanketkarpe.github.io/srujan/
