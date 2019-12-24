@@ -1,4 +1,7 @@
 # Installation steps for Srujan
+## OS requirements
+Install latest version of Raspbian on Raspberry Pi 3 or 4
+
 ## Packages to install
 <code>
 sudo apt install isc-dhcp-server
