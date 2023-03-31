@@ -1,6 +1,6 @@
 gglsbl==1.4.15
 python_libnmap==0.7.0
-redis==3.2.1
+redis==4.4.4
 requests==2.20.0
 rq==1.0
 spam_lists==1.0.0
