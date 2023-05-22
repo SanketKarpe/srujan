@@ -1,7 +1,7 @@
 gglsbl==1.4.15
 python_libnmap==0.7.0
 redis==3.2.1
-requests==2.20.0
+requests==2.31.0
 rq==1.0
 spam_lists==1.0.0
 tailer==0.4.1
