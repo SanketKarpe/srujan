@@ -34,6 +34,24 @@ except ImportError:
     print("Warning: Demo module not available")
     DEMO_ENABLED = False
 
+# Import policy router
+try:
+    from routes import policy
+    POLICY_ENABLED = True
+    print("✅ Policy engine available at /api/v1/policies")
+except ImportError:
+    print("Warning: Policy module not available")
+    POLICY_ENABLED = False
+
+# Import trust router
+try:
+    from routes import trust
+    TRUST_ENABLED = True
+    print("✅ Trust scoring available at /api/v1/trust")
+except ImportError:
+    print("Warning: Trust module not available")
+    TRUST_ENABLED = False
+
 app = FastAPI(
     title="Srujan API",
     description="Network security gateway for smart homes",
@@ -47,6 +65,14 @@ if ML_ENABLED:
 # Register demo router if available  
 if DEMO_ENABLED:
     app.include_router(demo.router)
+
+# Register policy router if available
+if POLICY_ENABLED:
+    app.include_router(policy.router)
+
+# Register trust router if available
+if TRUST_ENABLED:
+    app.include_router(trust.router)
 
 # CORS configuration
 app.add_middleware(
