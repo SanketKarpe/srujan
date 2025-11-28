@@ -13,12 +13,14 @@ import sys
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from api.routes import ids
+from api.routes import ids, policy, trust
 
 app = FastAPI(title="Srujan Demo Server", version="1.0.0-demo")
 
-# Register IDS router
+# Register routers
 app.include_router(ids.router, prefix="/api/v1/ids", tags=["ids"])
+app.include_router(policy.router)
+app.include_router(trust.router)
 
 # CORS
 app.add_middleware(

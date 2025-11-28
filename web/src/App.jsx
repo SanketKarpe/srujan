@@ -61,6 +61,9 @@ function App() {
 
                     <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
                         <Routes>
+                            <Route path="/" element={<Dashboard />} />
+                            <Route path="/devices" element={<DeviceList />} />
+                            <Route path="/threats" element={<ThreatsPage />} />
                             <Route path="/ml" element={<MLDashboard />} />
                             <Route path="/ml/insights/:mac" element={<MLInsights />} />
                             <Route path="/policies" element={<PolicyList />} />
