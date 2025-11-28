@@ -5,57 +5,93 @@
 	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
 -->
 <html>
-	<head>
-		<title>Srujan</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-	</head>
-	<body class="subpage">
 
-		<!-- Header -->
-			<header id="header">
-				<div class="inner">
-					<a href="index.html" class="logo"><strong>Srujan</strong>: Safer Networks for Smart Homes</a>
-					<nav id="nav">
-						<a href="index.html">Home</a>
-						<a href="srujan.html">About Srujan</a>
-					</nav>
-					<a href="#navPanel" class="navPanelToggle"><span class="fa fa-bars"></span></a>
-				</div>
+<head>
+	<title>Srujan</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+</head>
+
+<body class="subpage">
+
+	<!-- Header -->
+	<header id="header">
+		<div class="inner">
+			<a href="index.html" class="logo"><strong>Srujan</strong>: Safer Networks for Smart Homes</a>
+			<nav id="nav">
+				<a href="index.html">Home</a>
+				<a href="srujan.html">About Srujan</a>
+			</nav>
+			<a href="#navPanel" class="navPanelToggle"><span class="fa fa-bars"></span></a>
+		</div>
+	</header>
+
+	<!-- Three -->
+	<section id="three" class="wrapper">
+		<div class="inner">
+			<header class="align-center">
+				<h2>Srujan</h2>
+				<p>Safer Networks for Smart Homes with AI-Powered Threat Detection</p>
 			</header>
 
-		<!-- Three -->
-			<section id="three" class="wrapper">
-				<div class="inner">
-					<header class="align-center">
-						<h2>Srujan</h2>
-					</header>
-					<p style="font-size:18px;color:black">
-						Srujan is a new type of network segregation system, based on Raspberry Pi, that can be easily deployed on home networks. It allows home users to segregate the devices connecting to their home networks based on the threat profile. User can keep their smart home devices separate from their computers and mobile devices to mitigate risk of cross infection from low-trust devices like smart cameras, speakers and thermostats. Srujan was created to address the challenges around the plethora of IOT devices being deployed in smart homes that are vulnerable and do not receive patches. Srujan can intelligently segregate the home network into different zones based on the device type. It automatically identifies and alerts users when the IOT devices attempt to contact any IP or domain which has been blacklisted by Google Safe Browsing.
-					</p>
-					<p style="font-size:18px;color:black">
-					Srujan provides the following features:
-					<ul style="font-size:18px;color:black">
-					<li> Intelligent segregation of devices based on their type</li>
-					<li> Ability to create network usage stats for each device</li>
-					<li> Ability to quarantine untrusted devices</li>
-					<li> Easy to integrate with SIEM</li>
-					<li> Ability to lookup IP/Domain against Google Safe Browsing.</li>
-					<li> Integration with ANWI (All New Wireless IDS)</li>
-					<li> Prevent call-home pings to manufacturer for enhanced privacy.</li>
-					</ul>
-					</p>
+			<div class="align-center" style="margin-bottom: 2em;">
+				<a href="https://sanketkarpe.github.io/srujan/" class="button special big">Live Dashboard Demo</a>
+			</div>
+
+			<p style="font-size:18px;color:black">
+				Srujan is a new type of network segregation system, based on Raspberry Pi, that can be easily deployed
+				on home networks. It allows home users to segregate the devices connecting to their home networks based
+				on the threat profile. User can keep their smart home devices separate from their computers and mobile
+				devices to mitigate risk of cross infection from low-trust devices like smart cameras, speakers and
+				thermostats.
+			</p>
+			<p style="font-size:18px;color:black">
+				Srujan was created to address the challenges around the plethora of IOT devices being deployed in smart
+				homes that are vulnerable and do not receive patches. Srujan can intelligently segregate the home
+				network into different zones based on the device type. It automatically identifies and alerts users when
+				the IOT devices attempt to contact any IP or domain which has been blacklisted by Google Safe Browsing.
+			</p>
+
+			<h3 style="color:black">Key Features</h3>
+			<ul style="font-size:18px;color:black">
+				<li><strong>AI/ML Threat Detection:</strong> Uses Isolation Forest algorithms to detect anomalies and
+					zero-day threats in real-time.</li>
+				<li><strong>Modern React Dashboard:</strong> A beautiful, responsive interface for monitoring your
+					network.</li>
+				<li><strong>Intelligent Segregation:</strong> Automatically isolates IoT devices into separate VLANs.
+				</li>
+				<li><strong>Network Usage Stats:</strong> Detailed bandwidth and connection statistics for each device.
+				</li>
+				<li><strong>Quarantine:</strong> Ability to quarantine untrusted or compromised devices.</li>
+				<li><strong>SIEM Integration:</strong> Easy integration with Security Information and Event Management
+					systems.</li>
+				<li><strong>Threat Intelligence:</strong> Lookup IP/Domain against Google Safe Browsing.</li>
+				<li><strong>Privacy First:</strong> Prevent call-home pings to manufacturer for enhanced privacy.</li>
+			</ul>
+
+			<h3 style="color:black">Screenshots</h3>
+			<div class="box alt">
+				<div class="row 50% uniform">
+					<div class="12u$"><span class="image fit"><img src="images/dashboard.PNG" alt="Dashboard" /></span>
+					</div>
+					<div class="6u"><span class="image fit"><img src="images/devices.png" alt="Devices" /></span></div>
+					<div class="6u$"><span class="image fit"><img src="images/threats.png" alt="Threats" /></span></div>
 				</div>
-		
-			</section>
-			<iframe src="https://docs.google.com/gview?url=https://sanketkarpe.github.io/srujan/images/Srujan-Smart%20Firewall_DEFCON_2019.pdf&embedded=true" style="width:718px; height:700px;" frameborder="0"></iframe>
+			</div>
+		</div>
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+	</section>
+	<iframe
+		src="https://docs.google.com/gview?url=https://sanketkarpe.github.io/srujan/images/Srujan-Smart%20Firewall_DEFCON_2019.pdf&embedded=true"
+		style="width:718px; height:700px;" frameborder="0"></iframe>
 
-	</body>
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/skel.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+
+</body>
+
 </html>
