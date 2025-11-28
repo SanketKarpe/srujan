@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
     plugins: [react()],
+    base: '/srujan/', // Base URL for GitHub Pages
     server: {
         port: 3000,
         proxy: {
