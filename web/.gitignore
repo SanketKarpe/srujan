@@ -1,0 +1,9 @@
+node_modules
+dist
+.DS_Store
+*.log
+.env
+.env.local
+.env.production
+.vite
+package-lock.json

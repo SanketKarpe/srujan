@@ -1,0 +1,460 @@
+{
+  "devices": [
+    {
+      "mac": "3a:91:f7:4f:b4:e7",
+      "ip": "192.168.1.222",
+      "hostname": "smart-fridge-1",
+      "manufacturer": "Samsung",
+      "device_type": "Smart Fridge",
+      "category": "non_iot",
+      "status": "active",
+      "first_seen": "2025-10-28T19:19:38.230803",
+      "last_seen": "2025-11-28T18:53:38.230803"
+    },
+    {
+      "mac": "62:a8:07:30:85:17",
+      "ip": "192.168.1.55",
+      "hostname": "smart-tv-2",
+      "manufacturer": "Sony",
+      "device_type": "Smart TV",
+      "category": "non_iot",
+      "status": "active",
+      "first_seen": "2025-09-01T19:19:38.230803",
+      "last_seen": "2025-11-28T19:02:38.230803"
+    },
+    {
+      "mac": "56:80:31:00:c9:69",
+      "ip": "192.168.1.88",
+      "hostname": "thermostat-3",
+      "manufacturer": "Nest",
+      "device_type": "Thermostat",
+      "category": "iot",
+      "status": "active",
+      "first_seen": "2025-10-19T19:19:38.230803",
+      "last_seen": "2025-11-28T19:07:38.230803"
+    },
+    {
+      "mac": "50:14:9a:ad:50:4d",
+      "ip": "192.168.1.153",
+      "hostname": "router-4",
+      "manufacturer": "TP-Link",
+      "device_type": "Router",
+      "category": "iot",
+      "status": "active",
+      "first_seen": "2025-11-12T19:19:38.230803",
+      "last_seen": "2025-11-28T19:06:38.230803"
+    },
+    {
+      "mac": "ac:62:e5:07:d5:f8",
+      "ip": "192.168.1.233",
+      "hostname": "smart-bulb-5",
+      "manufacturer": "Xiaomi",
+      "device_type": "Smart Bulb",
+      "category": "iot",
+      "status": "active",
+      "first_seen": "2025-10-27T19:19:38.230803",
+      "last_seen": "2025-11-28T19:10:38.230803"
+    },
+    {
+      "mac": "8f:43:29:a9:81:5c",
+      "ip": "192.168.1.60",
+      "hostname": "nest-hub-6",
+      "manufacturer": "Google",
+      "device_type": "Nest Hub",
+      "category": "non_iot",
+      "status": "active",
+      "first_seen": "2025-10-30T19:19:38.230803",
+      "last_seen": "2025-11-28T18:42:38.230803"
+    },
+    {
+      "mac": "1c:f7:df:e8:66:0e",
+      "ip": "192.168.1.34",
+      "hostname": "doorbell-7",
+      "manufacturer": "Ring",
+      "device_type": "Doorbell",
+      "category": "iot",
+      "status": "active",
+      "first_seen": "2025-10-27T19:19:38.230803",
+      "last_seen": "2025-11-28T18:26:38.230803"
+    },
+    {
+      "mac": "a0:46:db:60:2e:a0",
+      "ip": "192.168.1.75",
+      "hostname": "echo-dot-8",
+      "manufacturer": "Amazon",
+      "device_type": "Echo Dot",
+      "category": "iot",
+      "status": "active",
+      "first_seen": "2025-10-20T19:19:38.230803",
+      "last_seen": "2025-11-28T18:57:38.230803"
+    },
+    {
+      "mac": "aa:7d:18:23:5b:e4",
+      "ip": "192.168.1.137",
+      "hostname": "pixel-phone-9",
+      "manufacturer": "Google",
+      "device_type": "Pixel Phone",
+      "category": "non_iot",
+      "status": "active",
+      "first_seen": "2025-11-27T19:19:38.230803",
+      "last_seen": "2025-11-28T18:22:38.230803"
+    },
+    {
+      "mac": "36:23:48:33:b7:06",
+      "ip": "192.168.1.36",
+      "hostname": "playstation-10",
+      "manufacturer": "Sony",
+      "device_type": "PlayStation",
+      "category": "non_iot",
+      "status": "active",
+      "first_seen": "2025-11-12T19:19:38.230803",
+      "last_seen": "2025-11-28T18:26:38.230803"
+    },
+    {
+      "mac": "3c:49:89:f2:de:53",
+      "ip": "192.168.1.157",
+      "hostname": "speaker-11",
+      "manufacturer": "Sonos",
+      "device_type": "Speaker",
+      "category": "iot",
+      "status": "active",
+      "first_seen": "2025-10-03T19:19:38.230803",
+      "last_seen": "2025-11-28T18:29:38.230803"
+    },
+    {
+      "mac": "66:a5:d9:57:a4:ea",
+      "ip": "192.168.1.181",
+      "hostname": "smart-phone-12",
+      "manufacturer": "Samsung",
+      "device_type": "Smart Phone",
+      "category": "non_iot",
+      "status": "active",
+      "first_seen": "2025-10-03T19:19:38.230803",
+      "last_seen": "2025-11-28T18:38:38.230803"
+    },
+    {
+      "mac": "4f:e3:9f:43:40:86",
+      "ip": "192.168.1.214",
+      "hostname": "playstation-13",
+      "manufacturer": "Sony",
+      "device_type": "PlayStation",
+      "category": "non_iot",
+      "status": "blocked",
+      "first_seen": "2025-10-23T19:19:38.230803",
+      "last_seen": "2025-11-28T19:12:38.230803"
+    },
+    {
+      "mac": "f7:75:7f:49:07:f6",
+      "ip": "192.168.1.183",
+      "hostname": "security-camera-14",
+      "manufacturer": "Ring",
+      "device_type": "Security Camera",
+      "category": "iot",
+      "status": "active",
+      "first_seen": "2025-10-12T19:19:38.230803",
+      "last_seen": "2025-11-28T19:19:38.230803"
+    },
+    {
+      "mac": "b4:99:f3:e0:a8:9a",
+      "ip": "192.168.1.61",
+      "hostname": "nest-hub-15",
+      "manufacturer": "Google",
+      "device_type": "Nest Hub",
+      "category": "non_iot",
+      "status": "active",
+      "first_seen": "2025-10-02T19:19:38.230803",
+      "last_seen": "2025-11-28T18:27:38.230803"
+    },
+    {
+      "mac": "c5:6a:d2:75:6e:ea",
+      "ip": "192.168.1.52",
+      "hostname": "speaker-16",
+      "manufacturer": "Sonos",
+      "device_type": "Speaker",
+      "category": "iot",
+      "status": "active",
+      "first_seen": "2025-09-30T19:19:38.230803",
+      "last_seen": "2025-11-28T18:46:38.230803"
+    },
+    {
+      "mac": "40:ef:60:9e:e6:84",
+      "ip": "192.168.1.137",
+      "hostname": "security-camera-17",
+      "manufacturer": "Ring",
+      "device_type": "Security Camera",
+      "category": "iot",
+      "status": "active",
+      "first_seen": "2025-10-18T19:19:38.230803",
+      "last_seen": "2025-11-28T18:44:38.230803"
+    },
+    {
+      "mac": "7a:6d:b9:44:df:8b",
+      "ip": "192.168.1.55",
+      "hostname": "chromecast-18",
+      "manufacturer": "Google",
+      "device_type": "Chromecast",
+      "category": "non_iot",
+      "status": "active",
+      "first_seen": "2025-10-01T19:19:38.230803",
+      "last_seen": "2025-11-28T18:24:38.230803"
+    },
+    {
+      "mac": "08:33:f9:07:b3:3f",
+      "ip": "192.168.1.68",
+      "hostname": "washing-machine-19",
+      "manufacturer": "LG",
+      "device_type": "Washing Machine",
+      "category": "non_iot",
+      "status": "active",
+      "first_seen": "2025-10-08T19:19:38.230803",
+      "last_seen": "2025-11-28T18:29:38.230803"
+    },
+    {
+      "mac": "32:6a:a5:cf:7e:a4",
+      "ip": "192.168.1.143",
+      "hostname": "chromecast-20",
+      "manufacturer": "Google",
+      "device_type": "Chromecast",
+      "category": "non_iot",
+      "status": "active",
+      "first_seen": "2025-09-22T19:19:38.230803",
+      "last_seen": "2025-11-28T18:19:38.230803"
+    }
+  ],
+  "threats": [
+    {
+      "timestamp": "2025-11-28T08:19:38.230803",
+      "device_ip": "192.168.1.34",
+      "dns_query": "tracking-ads.info",
+      "tags": [
+        "Blacklist",
+        "Malware"
+      ],
+      "severity": "high"
+    },
+    {
+      "timestamp": "2025-11-28T07:19:38.230803",
+      "device_ip": "192.168.1.181",
+      "dns_query": "botnet-command.net",
+      "tags": [
+        "GSB"
+      ],
+      "severity": "high"
+    },
+    {
+      "timestamp": "2025-11-28T02:19:38.230803",
+      "device_ip": "192.168.1.75",
+      "dns_query": "phishing-site.com",
+      "tags": [
+        "Blacklist",
+        "GSB"
+      ],
+      "severity": "high"
+    },
+    {
+      "timestamp": "2025-11-28T02:19:38.230803",
+      "device_ip": "192.168.1.61",
+      "dns_query": "phishing-site.com",
+      "tags": [
+        "Phishing",
+        "Blacklist"
+      ],
+      "severity": "low"
+    },
+    {
+      "timestamp": "2025-11-27T20:19:38.230803",
+      "device_ip": "192.168.1.137",
+      "dns_query": "phishing-site.com",
+      "tags": [
+        "GSB",
+        "Malware"
+      ],
+      "severity": "high"
+    },
+    {
+      "timestamp": "2025-11-27T19:19:38.230803",
+      "device_ip": "192.168.1.143",
+      "dns_query": "malware-download.xyz",
+      "tags": [
+        "Phishing",
+        "Malware"
+      ],
+      "severity": "low"
+    },
+    {
+      "timestamp": "2025-11-27T18:19:38.230803",
+      "device_ip": "192.168.1.183",
+      "dns_query": "botnet-command.net",
+      "tags": [
+        "Blacklist"
+      ],
+      "severity": "medium"
+    },
+    {
+      "timestamp": "2025-11-25T23:19:38.230803",
+      "device_ip": "192.168.1.181",
+      "dns_query": "phishing-site.com",
+      "tags": [
+        "Blacklist"
+      ],
+      "severity": "high"
+    },
+    {
+      "timestamp": "2025-11-25T03:19:38.230803",
+      "device_ip": "192.168.1.157",
+      "dns_query": "botnet-command.net",
+      "tags": [
+        "Blacklist"
+      ],
+      "severity": "medium"
+    },
+    {
+      "timestamp": "2025-11-23T18:19:38.230803",
+      "device_ip": "192.168.1.137",
+      "dns_query": "malware-download.xyz",
+      "tags": [
+        "Blacklist"
+      ],
+      "severity": "high"
+    },
+    {
+      "timestamp": "2025-11-23T15:19:38.230803",
+      "device_ip": "192.168.1.52",
+      "dns_query": "tracking-ads.info",
+      "tags": [
+        "GSB"
+      ],
+      "severity": "high"
+    },
+    {
+      "timestamp": "2025-11-22T01:19:38.230803",
+      "device_ip": "192.168.1.183",
+      "dns_query": "tracking-ads.info",
+      "tags": [
+        "Blacklist",
+        "Malware"
+      ],
+      "severity": "high"
+    }
+  ],
+  "ml_alerts": [
+    {
+      "mac": "ac:62:e5:07:d5:f8",
+      "detected_at": "2025-11-25T02:19:38.230803",
+      "anomaly_score": -0.10005777281286031,
+      "confidence": 46,
+      "risk_level": "low",
+      "false_positive": false
+    },
+    {
+      "mac": "40:ef:60:9e:e6:84",
+      "detected_at": "2025-11-23T06:19:38.230803",
+      "anomaly_score": -0.2863061649228766,
+      "confidence": 63,
+      "risk_level": "medium",
+      "false_positive": false
+    },
+    {
+      "mac": "f7:75:7f:49:07:f6",
+      "detected_at": "2025-11-28T02:19:38.230803",
+      "anomaly_score": -0.11408053636167328,
+      "confidence": 47,
+      "risk_level": "low",
+      "false_positive": true
+    },
+    {
+      "mac": "f7:75:7f:49:07:f6",
+      "detected_at": "2025-11-25T20:19:38.230803",
+      "anomaly_score": -0.449116216963182,
+      "confidence": 90,
+      "risk_level": "critical",
+      "false_positive": false
+    },
+    {
+      "mac": "3a:91:f7:4f:b4:e7",
+      "detected_at": "2025-11-22T20:19:38.230803",
+      "anomaly_score": -0.20810346066865482,
+      "confidence": 70,
+      "risk_level": "medium",
+      "false_positive": false
+    },
+    {
+      "mac": "56:80:31:00:c9:69",
+      "detected_at": "2025-11-22T13:19:38.230803",
+      "anomaly_score": -0.16158526374853244,
+      "confidence": 53,
+      "risk_level": "low",
+      "false_positive": false
+    },
+    {
+      "mac": "7a:6d:b9:44:df:8b",
+      "detected_at": "2025-11-28T13:19:38.230803",
+      "anomaly_score": -0.4392554914038246,
+      "confidence": 88,
+      "risk_level": "critical",
+      "false_positive": false
+    },
+    {
+      "mac": "40:ef:60:9e:e6:84",
+      "detected_at": "2025-11-26T14:19:38.230803",
+      "anomaly_score": -0.43396573590034104,
+      "confidence": 89,
+      "risk_level": "critical",
+      "false_positive": false
+    },
+    {
+      "mac": "a0:46:db:60:2e:a0",
+      "detected_at": "2025-11-24T05:19:38.230803",
+      "anomaly_score": -0.49286343144659545,
+      "confidence": 99,
+      "risk_level": "critical",
+      "false_positive": false
+    },
+    {
+      "mac": "b4:99:f3:e0:a8:9a",
+      "detected_at": "2025-11-23T20:19:38.230803",
+      "anomaly_score": -0.41596440477865737,
+      "confidence": 93,
+      "risk_level": "critical",
+      "false_positive": false
+    },
+    {
+      "mac": "50:14:9a:ad:50:4d",
+      "detected_at": "2025-11-23T21:19:38.230803",
+      "anomaly_score": -0.3722563204372296,
+      "confidence": 85,
+      "risk_level": "high",
+      "false_positive": false
+    },
+    {
+      "mac": "8f:43:29:a9:81:5c",
+      "detected_at": "2025-11-23T00:19:38.230803",
+      "anomaly_score": -0.1822364691554876,
+      "confidence": 44,
+      "risk_level": "low",
+      "false_positive": false
+    },
+    {
+      "mac": "4f:e3:9f:43:40:86",
+      "detected_at": "2025-11-22T12:19:38.230803",
+      "anomaly_score": -0.33410813898526226,
+      "confidence": 77,
+      "risk_level": "high",
+      "false_positive": false
+    }
+  ],
+  "network_stats": {
+    "timestamp": "2025-11-28T19:19:38.230803",
+    "devices": {
+      "total": 20,
+      "active": 19,
+      "blocked": 1,
+      "new_today": 0
+    },
+    "security": {
+      "threats_today": 5,
+      "threats_blocked": 12,
+      "gsb_enabled": true
+    }
+  }
+}
