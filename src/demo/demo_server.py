@@ -8,8 +8,17 @@ import json
 from pathlib import Path
 from datetime import datetime
 import random
+import sys
+
+# Add parent directory to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from api.routes import ids
 
 app = FastAPI(title="Srujan Demo Server", version="1.0.0-demo")
+
+# Register IDS router
+app.include_router(ids.router, prefix="/api/v1/ids", tags=["ids"])
 
 # CORS
 app.add_middleware(

@@ -11,6 +11,8 @@ export default function Sidebar({ isOpen }) {
         { path: '/threats', icon: AlertTriangle, label: 'Threats' },
         { path: '/ml', icon: Brain, label: 'ML Detection' },
         { path: '/policies', icon: Shield, label: 'Policies' },
+        { path: '/trust', icon: Brain, label: 'Trust Dashboard' },
+        { path: '/ids', icon: AlertTriangle, label: 'IDS / IPS' },
         { path: '/settings', icon: Settings, label: 'Settings' },
     ]
 

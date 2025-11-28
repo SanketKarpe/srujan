@@ -19,7 +19,7 @@ from lib.utils import mac_to_vendor
 
 # Import ML router
 try:
-    from routes import ml
+    from api.routes import ml
     ML_ENABLED = True
 except ImportError:
     print("Warning: ML module not available")
@@ -27,7 +27,7 @@ except ImportError:
 
 # Import demo router
 try:
-    from routes import demo
+    from api.routes import demo
     DEMO_ENABLED = True
     print("✅ Demo mode available at /api/v1/demo")
 except ImportError:
@@ -36,7 +36,7 @@ except ImportError:
 
 # Import policy router
 try:
-    from routes import policy
+    from api.routes import policy
     POLICY_ENABLED = True
     print("✅ Policy engine available at /api/v1/policies")
 except ImportError:
@@ -45,12 +45,21 @@ except ImportError:
 
 # Import trust router
 try:
-    from routes import trust
+    from api.routes import trust
     TRUST_ENABLED = True
     print("✅ Trust scoring available at /api/v1/trust")
 except ImportError:
     print("Warning: Trust module not available")
     TRUST_ENABLED = False
+
+# Import IDS router
+try:
+    from api.routes import ids
+    IDS_ENABLED = True
+    print("✅ IDS module available at /api/v1/ids")
+except ImportError:
+    print("Warning: IDS module not available")
+    IDS_ENABLED = False
 
 app = FastAPI(
     title="Srujan API",
@@ -73,6 +82,10 @@ if POLICY_ENABLED:
 # Register trust router if available
 if TRUST_ENABLED:
     app.include_router(trust.router)
+    
+# Register IDS router if available
+if IDS_ENABLED:
+    app.include_router(ids.router, prefix="/api/v1/ids", tags=["ids"])
 
 # CORS configuration
 app.add_middleware(
@@ -87,25 +100,6 @@ app.add_middleware(
 class ConnectionManager:
     def __init__(self):
         self.active_connections: List[WebSocket] = []
-
-    async def connect(self, websocket: WebSocket):
-        await websocket.accept()
-        self.active_connections.append(websocket)
-
-    def disconnect(self, websocket: WebSocket):
-        self.active_connections.remove(websocket)
-
-    async def send_personal_message(self, message: str, websocket: WebSocket):
-        await websocket.send_text(message)
-
-    async def broadcast(self, message: dict):
-        for connection in self.active_connections:
-            try:
-                await connection.send_json(message)
-            except:
-                pass
-
-manager = ConnectionManager()
 
 # ==================== Helper Functions ====================
 

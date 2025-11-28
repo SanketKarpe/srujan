@@ -11,6 +11,8 @@ import PolicyList from './components/Policy/PolicyList'
 import PolicyBuilder from './components/Policy/PolicyBuilder'
 import TrustDashboard from './components/Policy/TrustDashboard'
 import PolicyTester from './components/Policy/PolicyTester'
+import IDSDashboard from './components/IDS/IDSDashboard'
+import RuleManager from './components/IDS/RuleManager'
 import Header from './components/Common/Header'
 import Sidebar from './components/Common/Sidebar'
 
@@ -59,15 +61,14 @@ function App() {
 
                     <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
                         <Routes>
-                            <Route path="/" element={<Dashboard />} />
-                            <Route path="/devices" element={<DeviceList />} />
-                            <Route path="/threats" element={<ThreatsPage />} />
                             <Route path="/ml" element={<MLDashboard />} />
                             <Route path="/ml/insights/:mac" element={<MLInsights />} />
                             <Route path="/policies" element={<PolicyList />} />
                             <Route path="/policies/new" element={<PolicyBuilder />} />
                             <Route path="/policies/:id/test" element={<PolicyTester />} />
                             <Route path="/trust" element={<TrustDashboard />} />
+                            <Route path="/ids" element={<IDSDashboard />} />
+                            <Route path="/ids/rules" element={<RuleManager />} />
                             <Route path="/settings" element={<SettingsPage />} />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>

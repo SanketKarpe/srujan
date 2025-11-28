@@ -258,6 +258,96 @@ class MockDataGenerator:
         print(f"Mock data saved to {filename}")
 
 
+class SuricataLogGenerator:
+    """Generates realistic Suricata eve.json logs"""
+    
+    def __init__(self, devices=None):
+        self.devices = devices or MockDataGenerator(num_devices=10).devices
+        self.alert_signatures = [
+            {"id": 2010983, "rev": 1, "severity": 2, "category": "Web Application Attack", "signature": "ET WEB_SERVER Possible SQL Injection Attempt"},
+            {"id": 2001569, "rev": 15, "severity": 1, "category": "Trojan Activity", "signature": "ET TROJAN C2 Domain Detected"},
+            {"id": 2100498, "rev": 7, "severity": 3, "category": "Attempted Denial of Service", "signature": "GPL ATTACK_RESPONSE 403 Forbidden"},
+            {"id": 2014702, "rev": 4, "severity": 2, "category": "Policy Violation", "signature": "ET POLICY Crypto Coin Miner Login"},
+            {"id": 2024217, "rev": 2, "severity": 1, "category": "Malware", "signature": "ET MALWARE Likely Linux/XorDDoS DDoS Attack"}
+        ]
+        
+    def generate_event(self):
+        """Generate a single Suricata event (alert, http, dns, etc.)"""
+        event_type = random.choices(
+            ["alert", "http", "dns", "flow", "tls"],
+            weights=[0.1, 0.4, 0.3, 0.1, 0.1],
+            k=1
+        )[0]
+        
+        device = random.choice(self.devices)
+        timestamp = datetime.now().isoformat()
+        
+        base_event = {
+            "timestamp": timestamp,
+            "flow_id": random.randint(1000000000000000, 9999999999999999),
+            "in_iface": "eth0",
+            "event_type": event_type,
+            "src_ip": device["ip"],
+            "src_port": random.randint(1024, 65535),
+            "dest_ip": self._random_external_ip(),
+            "dest_port": random.choice([80, 443, 53, 8080]),
+            "proto": "TCP" if event_type in ["http", "tls"] else "UDP"
+        }
+        
+        if event_type == "alert":
+            sig = random.choice(self.alert_signatures)
+            base_event["alert"] = {
+                "action": "allowed",
+                "gid": 1,
+                "signature_id": sig["id"],
+                "rev": sig["rev"],
+                "signature": sig["signature"],
+                "category": sig["category"],
+                "severity": sig["severity"]
+            }
+            # High severity alerts might be blocked
+            if sig["severity"] == 1 and random.random() > 0.5:
+                base_event["alert"]["action"] = "blocked"
+                
+        elif event_type == "http":
+            base_event["http"] = {
+                "hostname": "example.com",
+                "url": "/api/v1/data",
+                "http_user_agent": "Mozilla/5.0",
+                "http_method": "GET",
+                "protocol": "HTTP/1.1",
+                "status": 200,
+                "length": random.randint(100, 5000)
+            }
+            
+        elif event_type == "dns":
+            base_event["proto"] = "UDP"
+            base_event["dest_port"] = 53
+            base_event["dns"] = {
+                "type": "query",
+                "id": random.randint(1000, 9999),
+                "rrname": "google.com",
+                "rrtype": "A",
+                "tx_id": random.randint(1000, 9999)
+            }
+            
+        return base_event
+
+    def _random_external_ip(self):
+        return f"{random.randint(1, 223)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(0, 255)}"
+
+    def generate_log_file(self, filename="eve.json", count=100):
+        """Generate a file with multiple events"""
+        import json
+        
+        print(f"Generating {count} Suricata events to {filename}...")
+        with open(filename, 'w') as f:
+            for _ in range(count):
+                event = self.generate_event()
+                f.write(json.dumps(event) + "\n")
+        print("Done.")
+
+
 if __name__ == "__main__":
     # Generate and save mock data
     print("Generating mock data...")
@@ -268,4 +358,9 @@ if __name__ == "__main__":
     print(f"Generated {len(generator.ml_alerts)} ML alerts")
     
     generator.save_mock_data()
+    
+    # Generate Suricata logs
+    suricata_gen = SuricataLogGenerator(generator.devices)
+    suricata_gen.generate_log_file("eve.json", count=50)
+    
     print("Done!")

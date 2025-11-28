@@ -78,6 +78,40 @@ class PolicyDatabase:
             )
         ''')
         
+        # IDS Alerts table
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS ids_alerts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp TIMESTAMP,
+                event_type VARCHAR(20),
+                src_ip VARCHAR(15),
+                src_port INTEGER,
+                dest_ip VARCHAR(15),
+                dest_port INTEGER,
+                proto VARCHAR(10),
+                alert_signature_id INTEGER,
+                alert_signature VARCHAR(255),
+                alert_category VARCHAR(100),
+                alert_severity INTEGER,
+                action VARCHAR(20),
+                raw_json TEXT
+            )
+        ''')
+        
+        # IDS Rules table
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS ids_rules (
+                sid INTEGER PRIMARY KEY,
+                revision INTEGER,
+                signature VARCHAR(255),
+                category VARCHAR(100),
+                severity INTEGER,
+                enabled BOOLEAN DEFAULT TRUE,
+                raw_rule TEXT,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        
         conn.commit()
         conn.close()
     
@@ -350,6 +384,95 @@ class PolicyDatabase:
             rows = cursor.fetchall()
             
             return [dict(row) for row in rows]
+        finally:
+            conn.close()
+
+    # IDS Operations
+    
+    def log_ids_alert(self, event: Dict):
+        """Log IDS alert to database"""
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        
+        try:
+            alert = event.get('alert', {})
+            
+            cursor.execute('''
+                INSERT INTO ids_alerts (
+                    timestamp, event_type, src_ip, src_port, dest_ip, dest_port, proto,
+                    alert_signature_id, alert_signature, alert_category, alert_severity,
+                    action, raw_json
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                event.get('timestamp'),
+                event.get('event_type'),
+                event.get('src_ip'),
+                event.get('src_port'),
+                event.get('dest_ip'),
+                event.get('dest_port'),
+                event.get('proto'),
+                alert.get('signature_id'),
+                alert.get('signature'),
+                alert.get('category'),
+                alert.get('severity'),
+                alert.get('action', 'allowed'),
+                json.dumps(event)
+            ))
+            
+            conn.commit()
+        finally:
+            conn.close()
+            
+    def get_recent_alerts(self, limit: int = 50) -> List[Dict]:
+        """Get recent IDS alerts"""
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        try:
+            cursor.execute('''
+                SELECT * FROM ids_alerts 
+                ORDER BY timestamp DESC 
+                LIMIT ?
+            ''', (limit,))
+            
+            return [dict(row) for row in cursor.fetchall()]
+        finally:
+            conn.close()
+            
+    def upsert_ids_rule(self, rule: Dict):
+        """Insert or update IDS rule"""
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        
+        try:
+            cursor.execute('''
+                INSERT OR REPLACE INTO ids_rules (
+                    sid, revision, signature, category, severity, enabled, raw_rule, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                rule['sid'],
+                rule.get('rev', 1),
+                rule['signature'],
+                rule.get('category', 'Unknown'),
+                rule.get('severity', 3),
+                rule.get('enabled', True),
+                rule.get('raw_rule', ''),
+                datetime.now().isoformat()
+            ))
+            conn.commit()
+        finally:
+            conn.close()
+            
+    def get_ids_rules(self) -> List[Dict]:
+        """Get all IDS rules"""
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        try:
+            cursor.execute('SELECT * FROM ids_rules ORDER BY sid')
+            return [dict(row) for row in cursor.fetchall()]
         finally:
             conn.close()
 
