@@ -7,6 +7,10 @@ import SettingsPage from './components/Settings/SettingsPage'
 import SetupWizard from './components/Setup/SetupWizard'
 import MLDashboard from './components/ML/MLDashboard'
 import MLInsights from './components/ML/MLInsights'
+import PolicyList from './components/Policy/PolicyList'
+import PolicyBuilder from './components/Policy/PolicyBuilder'
+import TrustDashboard from './components/Policy/TrustDashboard'
+import PolicyTester from './components/Policy/PolicyTester'
 import Header from './components/Common/Header'
 import Sidebar from './components/Common/Sidebar'
 
@@ -60,6 +64,10 @@ function App() {
                             <Route path="/threats" element={<ThreatsPage />} />
                             <Route path="/ml" element={<MLDashboard />} />
                             <Route path="/ml/insights/:mac" element={<MLInsights />} />
+                            <Route path="/policies" element={<PolicyList />} />
+                            <Route path="/policies/new" element={<PolicyBuilder />} />
+                            <Route path="/policies/:id/test" element={<PolicyTester />} />
+                            <Route path="/trust" element={<TrustDashboard />} />
                             <Route path="/settings" element={<SettingsPage />} />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>

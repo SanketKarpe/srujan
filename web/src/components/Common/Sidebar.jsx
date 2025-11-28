@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Home, Monitor, AlertTriangle, Brain, Settings } from 'lucide-react'
+import { Home, Monitor, AlertTriangle, Brain, Settings, Shield } from 'lucide-react'
 
 export default function Sidebar({ isOpen }) {
     const location = useLocation()
@@ -10,6 +10,7 @@ export default function Sidebar({ isOpen }) {
         { path: '/devices', icon: Monitor, label: 'Devices' },
         { path: '/threats', icon: AlertTriangle, label: 'Threats' },
         { path: '/ml', icon: Brain, label: 'ML Detection' },
+        { path: '/policies', icon: Shield, label: 'Policies' },
         { path: '/settings', icon: Settings, label: 'Settings' },
     ]
 

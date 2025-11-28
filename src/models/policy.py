@@ -49,11 +49,28 @@ class PolicyCondition:
         Returns:
             True if condition is met, False otherwise
         """
-        actual_value = context.get(self.type)
+        # Map condition type to context key
+        context_key = self.type
+        if self.type == "time_range":
+            context_key = "time"
+            
+        actual_value = context.get(context_key)
         
         if actual_value is None:
             return False
         
+        # Special handling for time ranges
+        if self.type == "time_range" and self.operator == "in" and isinstance(self.value, list) and len(self.value) == 2:
+            start_time = self.value[0]
+            end_time = self.value[1]
+            current_time = actual_value
+            
+            if start_time <= end_time:
+                return start_time <= current_time <= end_time
+            else:
+                # Wrap around midnight (e.g. 22:00 to 06:00)
+                return current_time >= start_time or current_time <= end_time
+
         if self.operator == ">=":
             return actual_value >= self.value
         elif self.operator == "<=":

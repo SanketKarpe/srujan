@@ -4,7 +4,7 @@ Provides CRUD operations and testing for network policies.
 """
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 from datetime import datetime
 
 from services.policy_engine import PolicyEngine
@@ -23,7 +23,7 @@ class PolicyConditionCreate(BaseModel):
     """Schema for creating a policy condition."""
     type: str
     operator: str
-    value: any
+    value: Any
 
 
 class PolicyCreate(BaseModel):
