@@ -23,7 +23,14 @@ function App() {
     useEffect(() => {
         // Check if setup is complete
         const isSetupComplete = localStorage.getItem('srujan_setup_complete')
-        setSetupComplete(isSetupComplete === 'true')
+        const isDemoMode = import.meta.env.VITE_DEMO_MODE === 'true'
+
+        if (isDemoMode) {
+            console.log('Demo Mode active: Bypassing setup wizard')
+            setSetupComplete(true)
+        } else {
+            setSetupComplete(isSetupComplete === 'true')
+        }
 
         // Register service worker for PWA
         if ('serviceWorker' in navigator) {
