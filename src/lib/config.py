@@ -34,7 +34,8 @@ SFW_BLACKLIST_EXTENSION = "list"
 DEFAULT_DEVICE_CATEGORY = "non_iot"
 
 # Threat Intel Configuration
-GSB_API_KEY = 'YOUR_GSB_API_KEY'
+# Load API key from environment variable for security
+GSB_API_KEY = os.getenv('GSB_API_KEY', 'YOUR_GSB_API_KEY')
 
 # Configuration Flags
 GSB_ENABLE = True

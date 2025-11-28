@@ -6,6 +6,7 @@ the dnsmasq service.
 """
 import os
 import json
+import subprocess
 
 from lib.config import *
 from lib.utils import *
@@ -23,22 +24,29 @@ def seed_dhcp__tags():
     remove_config_file(conf_file)
     conf_file = DNSMASQ_CONFIGURATION_PATH + "non_iot" + DNSMASQ_CONFIGURATION_EXT
     remove_config_file(conf_file)
-    with open(SEED_DEVICE_CATEGORY) as json_data_file:
-        seed_tags = json.load(json_data_file)
-        mac_tags = seed_tags["mac"]
-        vendor_class_tags = seed_tags["vendor_class"]
+    try:
+        with open(SEED_DEVICE_CATEGORY) as json_data_file:
+            seed_tags = json.load(json_data_file)
+            mac_tags = seed_tags["mac"]
+            vendor_class_tags = seed_tags["vendor_class"]
 
-        for iot_mac in mac_tags["iot"]:
-            add_mac_tag("iot", iot_mac)
+            for iot_mac in mac_tags["iot"]:
+                add_mac_tag("iot", iot_mac)
 
-        for non_iot_mac in mac_tags["non_iot"]:
-            add_mac_tag("iot", non_iot_mac)
+            for non_iot_mac in mac_tags["non_iot"]:
+                add_mac_tag("non_iot", non_iot_mac)  # Fixed: was incorrectly "iot"
 
-        for iot_vendorclass in vendor_class_tags["iot"]:
-            add_vendorclass_tag("iot", iot_vendorclass)
+            for iot_vendorclass in vendor_class_tags["iot"]:
+                add_vendorclass_tag("iot", iot_vendorclass)
 
-        for non_iot_vendorclass in vendor_class_tags["non_iot"]:
-            add_vendorclass_tag("non_iot", non_iot_vendorclass)
+            for non_iot_vendorclass in vendor_class_tags["non_iot"]:
+                add_vendorclass_tag("non_iot", non_iot_vendorclass)
+    except FileNotFoundError:
+        print(f"Error: {SEED_DEVICE_CATEGORY} not found")
+        return
+    except json.JSONDecodeError as e:
+        print(f"Error parsing {SEED_DEVICE_CATEGORY}: {e}")
+        return
 
 
 def mac_to_oui(mac):
@@ -49,10 +57,14 @@ def mac_to_oui(mac):
 
     Returns:
         str: The OUI representation of the MAC address.
+        
+    Raises:
+        ValueError: If MAC address format is invalid.
     """
     mac_tmp = mac.split(":")
-    mac_oui = mac_tmp[0] + ":" + mac_tmp[1] + ":" + mac_tmp[2] + ":*:*:*"
-    return mac_oui
+    if len(mac_tmp) < 3:
+        raise ValueError(f"Invalid MAC address format: {mac}")
+    return ":".join(mac_tmp[:3]) + ":*:*:*"
 
 
 def log_ip_mac(mac, ip):
@@ -70,12 +82,22 @@ def log_ip_mac(mac, ip):
 
 def restart_dnsmasq():
     """Restarts the dnsmasq service and clears the lease file."""
-    os.system("service dnsmasq stop")
+    try:
+        subprocess.run(["systemctl", "stop", "dnsmasq"], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error stopping dnsmasq: {e}")
+    
     try:
         os.unlink(DNSMASQ_DHCP_LEASE_FILE)
-    except:
-        pass
-    os.system("service dnsmasq restart")
+    except FileNotFoundError:
+        pass  # File doesn't exist, that's fine
+    except Exception as e:
+        print(f"Error removing lease file: {e}")
+    
+    try:
+        subprocess.run(["systemctl", "restart", "dnsmasq"], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error restarting dnsmasq: {e}")
 
 def process_new_device(mac):
     """Processes a new device connecting to the network.
@@ -85,10 +107,15 @@ def process_new_device(mac):
     Args:
         mac (str): The MAC address of the new device.
     """
-    device_category = get_device_category(mac)
-    print("MAC : " + str(mac) + "," + device_category)
-    add_mac_tag(device_category, mac)
-    restart_dnsmasq()
+    try:
+        device_category = get_device_category(mac)
+        print(f"MAC: {mac}, Category: {device_category}")
+        add_mac_tag(device_category, mac)
+        restart_dnsmasq()
+    except ValueError as e:
+        print(f"Error processing device {mac}: {e}")
+    except Exception as e:
+        print(f"Unexpected error processing {mac}: {e}")
 
 
 # dhcp-mac=set:non-iot,D0:04:01:*:*:*
@@ -100,7 +127,7 @@ def add_mac_tag(tag, mac):
         mac (str): The MAC address to tag.
     """
     mac_oui = mac_to_oui(mac)
-    tag_data = "dhcp-mac=set:" + tag.strip() + "," + mac_oui + "\n"
+    tag_data = f"dhcp-mac=set:{tag.strip()},{mac_oui}\n"
     write_config(DNSMASQ_CONFIGURATION_PATH + tag + DNSMASQ_CONFIGURATION_EXT, tag_data,overwrite=False)
 
 
@@ -113,7 +140,7 @@ def add_vendorclass_tag(tag, vendorid, overwrite=False):
         vendorid (str): The vendor class identifier.
         overwrite (bool, optional): Whether to overwrite existing config. Defaults to False.
     """
-    tag_data = "dhcp-vendorclass=set:" + tag.strip() + "," + vendorid + "\n"
+    tag_data = f"dhcp-vendorclass=set:{tag.strip()},{vendorid}\n"
     write_config(DNSMASQ_CONFIGURATION_PATH + tag + DNSMASQ_CONFIGURATION_EXT, tag_data,overwrite=False)
 
 
@@ -128,8 +155,11 @@ def remove_tag(tag, tag_data):
         tag_data = mac_to_oui(tag_data)
     new_config_file = []
     config_file = read_config(DNSMASQ_CONFIGURATION_PATH + tag + ".conf")
+    if config_file is None:
+        print(f"Warning: Could not read config for tag {tag}")
+        return
     for line in config_file:
-        if not line.__contains__(tag_data):
+        if tag_data not in line:
             new_config_file.append(line)
     write_config(DNSMASQ_CONFIGURATION_PATH + tag + ".conf", new_config_file)
 
@@ -143,6 +173,8 @@ def get_device_category(mac):
         str: The device category (e.g., 'iot', 'non_iot').
     """
     vendor = mac_to_vendor(mac)
+    if vendor is None:
+        return DEFAULT_DEVICE_CATEGORY
     return vendor_to_category(vendor)
 
 
@@ -155,10 +187,20 @@ def vendor_to_category(found_vendor):
     Returns:
         str: The device category.
     """
-    vendor_category_mapping = json.loads(read_config(MANUFACTURER_CATEGORY_MAPPING))
+    config_content = read_config(MANUFACTURER_CATEGORY_MAPPING)
+    if config_content is None:
+        print(f"Warning: Could not read {MANUFACTURER_CATEGORY_MAPPING}")
+        return DEFAULT_DEVICE_CATEGORY
+    
+    try:
+        vendor_category_mapping = json.loads(config_content)
+    except json.JSONDecodeError as e:
+        print(f"Error parsing JSON from {MANUFACTURER_CATEGORY_MAPPING}: {e}")
+        return DEFAULT_DEVICE_CATEGORY
+    
     for category in vendor_category_mapping:
         for manufacturer_name in vendor_category_mapping[category]:
-            if found_vendor.lower() == manufacturer_name.lower():
+            if found_vendor and found_vendor.lower() == manufacturer_name.lower():
                 return category
 
     return DEFAULT_DEVICE_CATEGORY

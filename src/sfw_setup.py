@@ -121,13 +121,28 @@ def create_sfw_config_files(json_file):
 
 
 def configure_ip_forward():
-    """Enables IPv4 forwarding in sysctl.conf."""
-    with open("/etc/sysctl.conf","r+") as conf:
-        for line in conf:
-            if line.strip() == "net.ipv4.ip_forward=1":
-                return
-    with open("/etc/sysctl.conf","a") as conf:
-        conf.write("net.ipv4.ip_forward=1")
+    """Enables IPv4 forwarding in sysctl.conf.
+    
+    Returns:
+        bool: True if successful, False otherwise.
+    """
+    try:
+        with open("/etc/sysctl.conf", "r+") as conf:
+            for line in conf:
+                if line.strip() == "net.ipv4.ip_forward=1":
+                    return True
+        with open("/etc/sysctl.conf", "a") as conf:
+            conf.write("net.ipv4.ip_forward=1\n")
+        return True
+    except PermissionError:
+        print("Error: Need root privileges to modify sysctl.conf")
+        return False
+    except FileNotFoundError:
+        print("Error: /etc/sysctl.conf not found")
+        return False
+    except Exception as e:
+        print(f"Error configuring IP forward: {e}")
+        return False
 
 
 if __name__ == "__main__":

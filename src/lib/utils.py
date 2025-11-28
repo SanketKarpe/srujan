@@ -6,6 +6,7 @@ Google Safe Browsing integration, Elasticsearch interaction, and system operatio
 """
 import os
 import pathlib
+import subprocess
 from lib.config import *
 from pysafebrowsing import SafeBrowsing
 
@@ -17,6 +18,13 @@ from manuf import manuf
 
 
 sbl = None
+
+# Initialize MacParser once at module level for performance
+try:
+    _mac_parser = manuf.MacParser(update=False)
+except Exception as e:
+    print(f"Warning: Could not initialize MacParser: {e}")
+    _mac_parser = None
 
 
 # deprecated
@@ -71,7 +79,13 @@ def write_config(config_file, data, overwrite=True):
     mode = 'w'
     if overwrite is True:
         if file.exists():
-            os.rename(config_file,"/tmp/" + file.stem)
+            # Fix path traversal vulnerability
+            safe_stem = os.path.basename(file.stem)
+            backup_path = os.path.join("/tmp", safe_stem)
+            try:
+                os.rename(config_file, backup_path)
+            except (FileNotFoundError, OSError) as e:
+                print(f"Warning: Could not backup config file: {e}")
     else:
         mode = 'a'
 
@@ -139,7 +153,7 @@ def remove_config(config_file, config_option):
     new_config_file = []
     with open(config_file, 'r') as fp:
         for line in fp.readlines():
-            if not line.__contains__(config_option):
+            if config_option not in line:
                 new_config_file.append(line)
 
     with open(config_file, 'w') as fp:
@@ -180,7 +194,10 @@ def stop_dnsmasq():
     file = pathlib.Path("/var/lib/misc/dnsmasq.leases")
     if file.exists():
         file.unlink()
-    os.system("service dnsmasq stop")
+    try:
+        subprocess.run(["systemctl", "stop", "dnsmasq"], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error stopping dnsmasq: {e}")
 
 
 def restart_dnsmasq():
@@ -188,7 +205,10 @@ def restart_dnsmasq():
     file = pathlib.Path("/var/lib/misc/dnsmasq.leases")
     if file.exists():
         file.unlink()
-    os.system("service dnsmasq restart")
+    try:
+        subprocess.run(["systemctl", "restart", "dnsmasq"], check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error restarting dnsmasq: {e}")
 
 
 def mac_to_vendor(mac):
@@ -200,6 +220,10 @@ def mac_to_vendor(mac):
     Returns:
         str: The manufacturer name, or None if not found.
     """
-    p = manuf.MacParser(update=False)
-    return p.get_manuf_long(mac)
+    if _mac_parser is None:
+        return None
+    try:
+        return _mac_parser.get_manuf_long(mac)
+    except Exception:
+        return None
 

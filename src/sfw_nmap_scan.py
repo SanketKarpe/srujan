@@ -49,7 +49,7 @@ def process_report(nmap_report):
     """
     for host in nmap_report.hosts:
         if len(host.hostnames):
-            tmp_host = host.hostnames.pop()
+            tmp_host = host.hostnames[0]  # Use index instead of pop()
         else:
             tmp_host = host.address
 
@@ -82,9 +82,10 @@ def process_report(nmap_report):
             if host.os_fingerprinted:
                 cpelist = host.os.os_cpelist()
                 if len(cpelist):
-                    mcpe = cpelist.pop()
+                    mcpe = cpelist[0]  # Use index instead of pop()
                     jdata['vendor'] = mcpe.get_vendor()
                     jdata['product'] = mcpe.get_product()
+                if host.os.osmatches and len(host.os.osmatches) > 0:
                     jdata['os_name'] = host.os.osmatches[0].name
 
             ret = send2es(jdata,index_name=NMAP_SCAN_INDEX)
@@ -156,6 +157,6 @@ def nmap_scan_ip(ip):
         if report:
             # create a json object from an NmapReport instance
             process_report(report)
-    except:
-        pass
+    except Exception as e:
+        print(f"Error scanning IP {ip}: {e}")
 

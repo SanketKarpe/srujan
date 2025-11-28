@@ -37,12 +37,18 @@ Jul  5 16:11:23 lib-prime dnsmasq[1650]: query[A] api.peer5.com from 192.168.1.8
 
 """
 
-DHCPDISCOVER_NO_ADDRESS_ETH0 = '.*(DHCPDISCOVER)\(eth0\).*([0-9a-f]{2}(?::[0-9a-f]{2}){5}).*no address available'
-DHCPDISCOVER_NO_ADDRESS_ETH1 = '.*(DHCPDISCOVER)\(eth1\).*([0-9a-f]{2}(?::[0-9a-f]{2}){5}).*no address available'
-DHCPACK_IP_ADDRESS = '.*DHCPOFFER.*\s((?:[0-9]{1,3}\.){3}[0-9]{1,3}).* ([0-9a-f]{2}(?::[0-9a-f]{2}){5})'
-DNS_QUERY = '.*query\[A\]\s(.*)\sfrom\s((?:[0-9]{1,3}\.){3}[0-9]{1,3})'
+DHCPDISCOVER_NO_ADDRESS_ETH0 = r'.*(DHCPDISCOVER)\(eth0\).*([0-9a-f]{2}(?::[0-9a-f]{2}){5}).*no address available'
+DHCPDISCOVER_NO_ADDRESS_ETH1 = r'.*(DHCPDISCOVER)\(eth1\).*([0-9a-f]{2}(?::[0-9a-f]{2}){5}).*no address available'
+DHCPACK_IP_ADDRESS = r'.*DHCPOFFER.*\s((?:[0-9]{1,3}\.){3}[0-9]{1,3}).* ([0-9a-f]{2}(?::[0-9a-f]{2}){5})'
+DNS_QUERY = r'.*query\[A\]\s(.*)\sfrom\s((?:[0-9]{1,3}\.){3}[0-9]{1,3})'
+
+# Compile regex patterns at module level for performance
+DHCPDISCOVER_NO_ADDRESS_ETH0_RE = re.compile(DHCPDISCOVER_NO_ADDRESS_ETH0)
+DHCPDISCOVER_NO_ADDRESS_ETH1_RE = re.compile(DHCPDISCOVER_NO_ADDRESS_ETH1)
+DHCPACK_IP_ADDRESS_RE = re.compile(DHCPACK_IP_ADDRESS)
+DNS_QUERY_RE = re.compile(DNS_QUERY)
+
 sbl = None
-ti_tag = []
 
 redis_conn = Redis()
 new_device_queue = Queue('dhcp', connection=redis_conn)
@@ -58,12 +64,15 @@ def add_dns_query_q(dns, ip):
         dns (str): The domain name queried.
         ip (str): The IP address of the client making the query.
     """
-    ip_class = ipaddress.IPv4Address(ip)
-    # Do not process or log lib DNS queries
-
-    if not ip_class.is_link_local:
-        if not ip_class.is_loopback:
-            dns_queue.enqueue(log_dns, dns, ip)
+    try:
+        ip_class = ipaddress.IPv4Address(ip)
+    except ValueError:
+        print(f"Invalid IP address: {ip}")
+        return
+    
+    # Do not process or log link-local or loopback DNS queries
+    if not ip_class.is_link_local and not ip_class.is_loopback:
+        dns_queue.enqueue(log_dns, dns, ip)
 
 
 def add_device_q(mac):
@@ -102,53 +111,52 @@ def run_sfw():
     Monitors the dnsmasq log file for DHCP and DNS events and triggers appropriate actions.
     """
     prev_logline = ''
-    dhcp_ack_re = re.compile(DHCPACK_IP_ADDRESS)
-    dhcp_discover_eth0_re = re.compile(DHCPDISCOVER_NO_ADDRESS_ETH0)
-    dhcp_discover_eth1_re = re.compile(DHCPDISCOVER_NO_ADDRESS_ETH1)
-    dns_query_re = re.compile(DNS_QUERY)
     
     # Initialize Google Safe Browsing client
     if GSB_ENABLE:
         sbl = gsb_init()
 
     prev_allocated_mac = ""
-    for logline in tailer.follow(open(DNSMASQ_LOG_FILE)):
+    
+    # Use context manager to ensure file is properly closed
+    with open(DNSMASQ_LOG_FILE) as log_file:
+        for logline in tailer.follow(log_file):
 
-        dhcp_ack = dhcp_ack_re.search(logline)
-        if dhcp_ack:
-            add_ip_mac_log_q(dhcp_ack.group(1), dhcp_ack.group(2))
-            add_ip_scan_q(dhcp_ack.group(1))
-            continue
-
-        dhcp_discover_eth0 = dhcp_discover_eth0_re.search(logline)
-        dhcp_discover_eth1_prev = dhcp_discover_eth1_re.search(prev_logline)
-        # print("prev :",prev_logline)
-        # print("current :", logline)
-        if dhcp_discover_eth0 and dhcp_discover_eth1_prev:
-            print("eth0,eth1 : ", dhcp_discover_eth0.group(2))
-            if prev_allocated_mac != dhcp_discover_eth0.group(2):
-                add_device_q(dhcp_discover_eth0.group(2))
-                prev_logline = ""  # New need to confirm working
-                prev_allocated_mac = dhcp_discover_eth0.group(2)
-                time.sleep(1)
+            dhcp_ack = DHCPACK_IP_ADDRESS_RE.search(logline)
+            if dhcp_ack:
+                add_ip_mac_log_q(dhcp_ack.group(1), dhcp_ack.group(2))
+                add_ip_scan_q(dhcp_ack.group(1))
                 continue
 
-        dhcp_discover_eth1 = dhcp_discover_eth1_re.search(logline)
-        dhcp_discover_eth0_prev = dhcp_discover_eth0_re.search(prev_logline)
-        if dhcp_discover_eth1 and dhcp_discover_eth0_prev:
-            print("eth1,eth0 : ", dhcp_discover_eth1.group(2))
-            if prev_allocated_mac != dhcp_discover_eth1.group(2):
-                add_device_q(dhcp_discover_eth1.group(2))
-                prev_logline = ""
-                prev_allocated_mac = dhcp_discover_eth1.group(2)
-                time.sleep(1)
-                continue
+            dhcp_discover_eth0 = DHCPDISCOVER_NO_ADDRESS_ETH0_RE.search(logline)
+            dhcp_discover_eth1_prev = DHCPDISCOVER_NO_ADDRESS_ETH1_RE.search(prev_logline)
+            # print("prev :",prev_logline)
+            # print("current :", logline)
+            if dhcp_discover_eth0 and dhcp_discover_eth1_prev:
+                print("eth0,eth1 : ", dhcp_discover_eth0.group(2))
+                if prev_allocated_mac != dhcp_discover_eth0.group(2):
+                    add_device_q(dhcp_discover_eth0.group(2))
+                    prev_logline = ""  # New need to confirm working
+                    prev_allocated_mac = dhcp_discover_eth0.group(2)
+                    time.sleep(1)
+                    continue
 
-        dns_query = dns_query_re.search(logline)
-        if dns_query:
-            # print(dns_query.group(1) + "," + dns_query.group(2))
-            add_dns_query_q(dns_query.group(1), dns_query.group(2))
-        prev_logline = logline
+            dhcp_discover_eth1 = DHCPDISCOVER_NO_ADDRESS_ETH1_RE.search(logline)
+            dhcp_discover_eth0_prev = DHCPDISCOVER_NO_ADDRESS_ETH0_RE.search(prev_logline)
+            if dhcp_discover_eth1 and dhcp_discover_eth0_prev:
+                print("eth1,eth0 : ", dhcp_discover_eth1.group(2))
+                if prev_allocated_mac != dhcp_discover_eth1.group(2):
+                    add_device_q(dhcp_discover_eth1.group(2))
+                    prev_logline = ""
+                    prev_allocated_mac = dhcp_discover_eth1.group(2)
+                    time.sleep(1)
+                    continue
+
+            dns_query = DNS_QUERY_RE.search(logline)
+            if dns_query:
+                # print(dns_query.group(1) + "," + dns_query.group(2))
+                add_dns_query_q(dns_query.group(1), dns_query.group(2))
+            prev_logline = logline
 
 
 def main():

@@ -20,11 +20,16 @@ def seed_dns_blacklist():
     """
     # create_config_file(DNS_BLACKLIST_PATH)
     remove_config_file(DNSMASQ_DNS_BLOCKLIST)
-    with open(SEED_DNS_BLOCKLIST) as json_data_file:
-        dns_blacklists = json.load(json_data_file)
-        sink_ip = dns_blacklists["sink_ip"]
-        for dns_entry in dns_blacklists["urls"]:
-            add_dns_block(sink_ip, dns_entry)
+    try:
+        with open(SEED_DNS_BLOCKLIST) as json_data_file:
+            dns_blacklists = json.load(json_data_file)
+            sink_ip = dns_blacklists["sink_ip"]
+            for dns_entry in dns_blacklists["urls"]:
+                add_dns_block(sink_ip, dns_entry)
+    except FileNotFoundError:
+        print(f"Error: {SEED_DNS_BLOCKLIST} not found")
+    except json.JSONDecodeError as e:
+        print(f"Error parsing JSON from {SEED_DNS_BLOCKLIST}: {e}")
 
 
 def add_dns_block(sink_ip, dns_entry):
@@ -34,7 +39,7 @@ def add_dns_block(sink_ip, dns_entry):
         sink_ip (str): The IP address to redirect blocked domains to.
         dns_entry (str): The domain name to block.
     """
-    dns_blacklists_data = "address=/" + dns_entry.strip() + "/" + sink_ip + "\n"
+    dns_blacklists_data = f"address=/{dns_entry.strip()}/{sink_ip}\n"
     write_config(DNSMASQ_DNS_BLOCKLIST, dns_blacklists_data, overwrite=False)
 
 
