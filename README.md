@@ -10,8 +10,17 @@ patches. Srujan can intelligently segregate the home network into different zone
 It automatically identifies and alerts users when the IOT devices attempt to contact any IP or domain which has been 
 blacklisted by [Google Safe Browsing](https://safebrowsing.google.com/) , [hpHosts](https://www.hosts-file.net/) or [Spamhaus](https://www.spamhaus.org/zen/).
 
-#### Srujan provides the following features:
+#### Reporting Dashboard
+The new Srujan dashboard is built with React and provides real-time insights into your network security.
 
+![Reporting Dashboard](https://github.com/SanketKarpe/srujan/blob/master/docs/images/dashboard.PNG)
+
+## Getting Started
+Srujan can be run in **Demo Mode** on any computer for testing and development, or installed on a Raspberry Pi for actual network protection.
+
+See [INSTALL.md](INSTALL.md) for detailed instructions.
+
+### Features
 * Intelligent segregation of devices based on their type
 * Ability to create network usage stats for each device
 * Ability to quarantine untrusted devices
@@ -19,7 +28,4 @@ blacklisted by [Google Safe Browsing](https://safebrowsing.google.com/) , [hpHos
 * Ability to lookup IP/Domain against Google Safe Browsing.
 * Integration with [ANWI (All New Wireless IDS)](https://github.com/anwi-wips/anwi)
 * Prevent call-home pings to manufacturer for enhanced privacy.
-
-#### Reporting Dashboard
-![Reporting Dashboard](https://github.com/SanketKarpe/srujan/blob/master/docs/images/dashboard.PNG)
 
