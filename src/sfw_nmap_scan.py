@@ -1,4 +1,9 @@
 #!/usr/bin/python3
+"""Nmap scanning module for Srujan.
+
+This module handles running Nmap scans on devices, parsing the results,
+and sending the data to Elasticsearch.
+"""
 import json
 import sys
 from datetime import datetime
@@ -11,14 +16,14 @@ import time
 
 # start a new nmap scan on localhost with some specific options
 def do_scan(targets, options):
-    """
+    """Executes an Nmap scan.
 
     Args:
-        targets ():
-        options ():
+        targets (str): The target IP address(es) or range.
+        options (str): Nmap command-line options.
 
     Returns:
-
+        NmapReport: The parsed Nmap report, or None if parsing fails.
     """
     parsed = None
     nmproc = NmapProcess(targets, options)
@@ -37,13 +42,10 @@ def do_scan(targets, options):
 
 # print scan results from a nmap report
 def process_report(nmap_report):
-    """
+    """Processes an Nmap report and sends results to Elasticsearch.
 
     Args:
-        nmap_report ():
-
-    Returns:
-
+        nmap_report (NmapReport): The Nmap report object to process.
     """
     for host in nmap_report.hosts:
         if len(host.hostnames):
@@ -140,6 +142,14 @@ def print_scan(nmap_report):
 
 
 def nmap_scan_ip(ip):
+    """Initiates an Nmap scan for a specific IP address.
+
+    Waits for 20 seconds before scanning to allow the device to settle.
+    Scans with options: -Pn -O -sV --max-os-tries=1 --osscan-guess -T4.
+
+    Args:
+        ip (str): The IP address to scan.
+    """
     time.sleep(20)
     try:
         report = do_scan(ip, "-Pn -O -sV --max-os-tries=1 --osscan-guess -T4")

@@ -1,6 +1,13 @@
 #!/usr/bin/python3
+"""Iptables management module for Srujan.
+
+This module handles the seeding of iptables rules and related configurations
+based on device tags and DNS blacklists.
+"""
 from lib.utils import *
 from lib.config import *
+from sfw_dhcp import add_mac_tag, add_vendorclass_tag
+from sfw_dns import add_dns_block
 import iptc
 
 """
@@ -41,6 +48,13 @@ IOT + IOT
 
 
 def seed_dhcp__tags(seed_tags):
+    """Seeds DHCP tags for iptables integration.
+
+    Configures MAC and vendor class tags based on the provided seed tags.
+
+    Args:
+        seed_tags (dict): A dictionary containing 'tags' with 'iot' and 'non_iot' lists.
+    """
     # create_config_file(TAG_CONF_PATH)
     # create_config_file(NON_IOT_CONF_PATH)
 
@@ -55,6 +69,13 @@ def seed_dhcp__tags(seed_tags):
 
 
 def seed_dns_blacklist(dns_blacklists):
+    """Seeds DNS blacklist rules.
+
+    Configures DNS blocking for specified URLs by redirecting them to a sinkhole IP.
+
+    Args:
+        dns_blacklists (dict): A dictionary containing 'sink_ip' and 'urls' list.
+    """
     # create_config_file(DNS_BLACKLIST_PATH)
     sink_ip = dns_blacklists["sink_ip"]
     for dns_entry in dns_blacklists["urls"]:
@@ -62,4 +83,9 @@ def seed_dns_blacklist(dns_blacklists):
 
 
 def seed_iptables_rules(seed_rules):
+    """Seeds initial iptables rules.
+
+    Args:
+        seed_rules (dict): A dictionary containing initial iptables rules (currently unused).
+    """
     return

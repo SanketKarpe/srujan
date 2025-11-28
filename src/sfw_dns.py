@@ -1,4 +1,9 @@
 #!/usr/bin/python3
+"""DNS management module for Srujan.
+
+This module handles DNS blacklisting, enrichment with threat intelligence,
+and logging of DNS queries.
+"""
 import os
 import ipaddress
 import json
@@ -8,12 +13,10 @@ from sfw_lookup import ti_lookup
 
 
 def seed_dns_blacklist():
-    """
+    """Seeds the DNS blacklist configuration.
 
-    Args:
-
-    Returns:
-
+    Reads the seed DNS blocklist file and configures dnsmasq to block specified domains
+    by redirecting them to a sinkhole IP.
     """
     # create_config_file(DNS_BLACKLIST_PATH)
     remove_config_file(DNSMASQ_DNS_BLOCKLIST)
@@ -25,27 +28,21 @@ def seed_dns_blacklist():
 
 
 def add_dns_block(sink_ip, dns_entry):
-    """
+    """Adds a DNS block rule to the configuration.
 
     Args:
-        sink_ip ():
-        dns_entry ():
-
-    Returns:
-
+        sink_ip (str): The IP address to redirect blocked domains to.
+        dns_entry (str): The domain name to block.
     """
     dns_blacklists_data = "address=/" + dns_entry.strip() + "/" + sink_ip + "\n"
     write_config(DNSMASQ_DNS_BLOCKLIST, dns_blacklists_data, overwrite=False)
 
 
 def remove_dns_block(dns_entry):
-    """
+    """Removes a DNS block rule from the configuration.
 
     Args:
-        dns_entry ():
-
-    Returns:
-
+        dns_entry (str): The domain name to unblock.
     """
     new_config_file = []
     config_data = read_config(DNSMASQ_DNS_BLOCKLIST)
@@ -57,33 +54,34 @@ def remove_dns_block(dns_entry):
 
 # To Do : Add more lookups sources
 def enrich_dns(dns):
-    """
+    """Enriches a DNS query with threat intelligence data.
+
+    Checks the domain against enabled threat intelligence sources (Spamhaus, Google Safe Browsing, etc.).
 
     Args:
-        dns ():
+        dns (str): The domain name to check.
 
     Returns:
-
+        list: A list of tags or threat indicators found for the domain.
     """
     result = []
     if TI_ENABLE:
         result = ti_lookup(dns)
     if GSB_ENABLE:
-        result.append(gsb_lookup(dns))
+        gsb_result = gsb_lookup(dns)
+        if gsb_result:
+            result.append("GSB")
     if dns.__contains__("malware"):
         result.append("MALICIOUS")
     return result
 
 
 def log_dns(dns, ip):
-    """
+    """Logs a DNS query and its enrichment data to Elasticsearch.
 
     Args:
-        dns ():
-        ip ():
-
-    Returns:
-
+        dns (str): The domain name queried.
+        ip (str): The IP address of the client.
     """
     ti_tag = []
     ti_tag = enrich_dns(dns)

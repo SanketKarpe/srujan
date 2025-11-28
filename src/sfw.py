@@ -1,4 +1,9 @@
 #!/usr/bin/python3
+"""Main controller script for Srujan.
+
+This script monitors dnsmasq logs for DHCP and DNS events, and queues tasks
+for device processing, IP scanning, and DNS logging.
+"""
 import ipaddress
 import re
 import time
@@ -47,6 +52,12 @@ dns_queue = Queue('dns', connection=redis_conn)
 
 
 def add_dns_query_q(dns, ip):
+    """Adds a DNS query to the processing queue.
+
+    Args:
+        dns (str): The domain name queried.
+        ip (str): The IP address of the client making the query.
+    """
     ip_class = ipaddress.IPv4Address(ip)
     # Do not process or log lib DNS queries
 
@@ -56,55 +67,47 @@ def add_dns_query_q(dns, ip):
 
 
 def add_device_q(mac):
-    """
+    """Adds a new device to the processing queue.
 
     Args:
-        mac ():
-
-    Returns:
-
+        mac (str): The MAC address of the new device.
     """
     new_device_queue.enqueue(process_new_device, mac)
     return
 
 
 def add_ip_mac_log_q(ip, mac):
-    """
+    """Adds an IP-MAC mapping to the logging queue.
 
     Args:
-        ip ():
-        mac ():
-
-    Returns:
-
+        ip (str): The IP address.
+        mac (str): The MAC address.
     """
     ip_mac_queue.enqueue(log_ip_mac, mac, ip)
     return
 
 def add_ip_scan_q(ip):
-    """
+    """Adds an IP address to the scan queue.
 
     Args:
-        ip ():
-
-    Returns:
-
+        ip (str): The IP address to scan.
     """
     ip_scan_queue.enqueue(nmap_scan_ip,ip,job_timeout=900)
     return
 
 
 def run_sfw():
-    """
+    """Main loop for Srujan Firewall.
 
-    Returns:
-
+    Monitors the dnsmasq log file for DHCP and DNS events and triggers appropriate actions.
     """
     prev_logline = ''
     dhcp_ack_re = re.compile(DHCPACK_IP_ADDRESS)
     dhcp_discover_eth0_re = re.compile(DHCPDISCOVER_NO_ADDRESS_ETH0)
     dhcp_discover_eth1_re = re.compile(DHCPDISCOVER_NO_ADDRESS_ETH1)
     dns_query_re = re.compile(DNS_QUERY)
+    
+    # Initialize Google Safe Browsing client
     if GSB_ENABLE:
         sbl = gsb_init()
 
@@ -149,6 +152,7 @@ def run_sfw():
 
 
 def main():
+    """Entry point for the script."""
     restart_dnsmasq()
     run_sfw()
 

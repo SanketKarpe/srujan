@@ -1,9 +1,8 @@
-gglsbl==1.4.15
-python_libnmap==0.7.0
-redis==3.2.1
-requests==2.20.0
-rq==1.0
-spam_lists==1.0.0
+python-libnmap==0.7.3
+redis==4.6.0
+requests==2.31.0
+rq==1.16.2
 tailer==0.4.1
-elasticsearch==7.0.2
-manuf==1.0.0
+elasticsearch==7.17.9
+manuf==1.1.5
+pysafebrowsing==0.1.4

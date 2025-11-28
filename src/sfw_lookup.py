@@ -1,29 +1,28 @@
 #!/usr/bin/python3
+"""Threat Intelligence lookup module for Srujan.
+
+This module provides functionality to check domains against local blacklists.
+External threat intelligence sources (Spamhaus, HpHosts) have been removed
+as the 'spam_lists' library is no longer maintained.
+"""
 import os
-from spam_lists.clients import SPAMHAUS_ZEN, SPAMHAUS_DBL, HpHosts
 
 blacklist_path = 'Banlist'
 
 
 def ti_lookup(dns):
-    """
+    """Checks a domain against local blacklists.
 
     Args:
-        dns ():
+        dns (str): The domain name to check.
 
     Returns:
-
+        list: A list of local blacklist files where the domain was found.
     """
     result = []
     try:
-        hpHost = HpHosts('spam-lists-test-suite')
-        if hpHost.lookup(dns) is not None:
-            result.append('HpHost')
-        if SPAMHAUS_DBL.lookup(dns) is not None:
-            result.append('SPAMHAUS')
-        if SPAMHAUS_ZEN.lookup(dns) is not None:
-            result.append('SPAMHAUS_ZEN')
-
+        # External lookups removed due to deprecated libraries
+        
         for root, dirs, files in os.walk(blacklist_path):
             for filename in files:
                 with open(os.path.join(root, filename)) as fp:
@@ -33,9 +32,10 @@ def ti_lookup(dns):
                             result.append(filename.strip('.txt'))
 
         # Return list of tags where dns is found
-        print(result)
-    except:
-        pass
+        if result:
+            print(result)
+    except Exception as e:
+        print(f"Error in ti_lookup: {e}")
     return result
 
 

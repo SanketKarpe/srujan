@@ -1,4 +1,9 @@
 #!/usr/bin/python3
+"""Setup and configuration script for Srujan.
+
+This script parses a JSON configuration file and generates the necessary
+configuration files for dnsmasq (core, DHCP, DNS). It also configures IP forwarding.
+"""
 # import sys
 import json
 from datetime import datetime
@@ -17,13 +22,10 @@ import string
 
 
 def create_core_config(core_config):
-    """
+    """Generates the core dnsmasq configuration file.
 
     Args:
-        core_config ():
-
-    Returns:
-
+        core_config (dict): Dictionary containing core configuration options (interfaces, logging).
     """
     core_config_data = [CONFIG_FILE_HEADER]
     for interfaces in core_config["interfaces"]:
@@ -41,13 +43,10 @@ def create_core_config(core_config):
 
 
 def create_dhcp_config(dhcp_config):
-    """
+    """Generates the DHCP dnsmasq configuration file.
 
     Args:
-        dhcp_config ():
-
-    Returns:
-
+        dhcp_config (dict): Dictionary containing DHCP configuration options (subnets, ranges, options).
     """
 
     dhcp_config_data = [CONFIG_FILE_HEADER]
@@ -71,13 +70,10 @@ def create_dhcp_config(dhcp_config):
 
 
 def create_dns_config(dns_config):
-    """
+    """Generates the DNS dnsmasq configuration file.
 
     Args:
-        dns_config ():
-
-    Returns:
-
+        dns_config (dict): Dictionary containing DNS configuration options (servers, options).
     """
     dns_config_data = [CONFIG_FILE_HEADER]
 
@@ -92,13 +88,16 @@ def create_dns_config(dns_config):
 
 
 def create_sfw_config_files(json_file):
-    """
+    """Orchestrates the creation of all Srujan configuration files.
+
+    Reads the master JSON config, generates specific configs, seeds blacklists and tags,
+    and restarts dnsmasq.
 
     Args:
-        json_file ():
+        json_file (str): Path to the master JSON configuration file.
 
     Returns:
-
+        bool: True if successful, False otherwise.
     """
 
     try:
@@ -122,6 +121,7 @@ def create_sfw_config_files(json_file):
 
 
 def configure_ip_forward():
+    """Enables IPv4 forwarding in sysctl.conf."""
     with open("/etc/sysctl.conf","r+") as conf:
         for line in conf:
             if line.strip() == "net.ipv4.ip_forward=1":

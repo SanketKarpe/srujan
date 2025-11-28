@@ -1,4 +1,9 @@
 #!/usr/bin/python3
+"""Configuration constants for the Srujan application.
+
+This module contains file paths, API keys, and other configuration settings
+used throughout the application.
+"""
 import os
 
 CONFIG_FILE_HEADER = "# Configuration file created by SFW\n"
@@ -29,10 +34,10 @@ SFW_BLACKLIST_EXTENSION = "list"
 DEFAULT_DEVICE_CATEGORY = "non_iot"
 
 # Threat Intel Configuration
-GSB_API_KEY = 'GSB_KEY'
-GSB_DB_NAME = os.getcwd() + "data/gsb_v4.db"
+GSB_API_KEY = 'YOUR_GSB_API_KEY'
+
 # Configuration Flags
-GSB_ENABLE = False
+GSB_ENABLE = True
 TI_ENABLE = True
 
 # Elasticsearch Details
